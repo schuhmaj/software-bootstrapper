@@ -1,0 +1,29 @@
+---
+name: llvm
+version: 20.1.8
+source: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-20.1.8.tar.gz
+description: |
+  LLVM is a collection of modular and reusable compiler and toolchain
+  technologies. This module provides access to LLVM 20.1.8 installed
+  in /opt/llvm/20.1.8.
+  This module sets up the environment to use:
+    - Clang C/C++ compiler
+    - LLVM tools and utilities
+    - LLVM libraries and headers
+category: compiler, development
+cmake:
+  CMAKE_BUILD_TYPE": "Release"
+  LLVM_ENABLE_PROJECTS: "clang;compiler-rt;lld"
+  LLVM_ENABLE_RUNTIMES: "openmp;offload"
+  LLVM_TARGETS_TO_BUILD: "NVPTX;X86"
+  LLVM_ENABLE_Z3_SOLVER: "0"
+  LLVM_INCLUDE_BENCHMARKS: "0"
+  LLVM_INCLUDE_EXAMPLES: "0"
+  LLVM_INCLUDE_TESTS: "0"
+  CMAKE_INSTALL_RPATH_USE_LINK_PATH: "ON"
+  LLVM_ENABLE_OCAMLDOC: "OFF"
+  LLVM_ENABLE_BINDINGS: "OFF"
+  LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN: "OFF"
+  LLVM_BUILD_LLVM_DYLIB: "ON"
+  LLVM_ENABLE_DUMP: "OFF"
+  LLVM_PARALLEL_LINK_JOBS: "8"

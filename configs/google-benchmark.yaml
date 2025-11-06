@@ -1,0 +1,10 @@
+---
+name: google-benchmark
+version: 1.9.4
+source: https://github.com/google/benchmark/archive/refs/tags/v1.9.4.tar.gz
+description: |
+  Benchmarking framework for C++.
+category: benchmarking
+cmake:
+  CMAKE_BUILD_TYPE: Release
+  BENCHMARK_ENABLE_TESTING: OFF

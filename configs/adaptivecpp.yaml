@@ -1,0 +1,9 @@
+---
+name: AdaptiveCpp
+version: 25.02.0
+source: https://github.com/AdaptiveCpp/AdaptiveCpp/archive/refs/tags/v25.02.0.tar.gz
+description: |
+  AdaptiveCpp is a portable, open-source C++ library for high-performance parallel programming.
+category: parallelism, portable, GPU.
+cmake:
+  CMAKE_BUILD_TYPE: Release

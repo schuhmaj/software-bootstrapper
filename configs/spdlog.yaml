@@ -1,0 +1,9 @@
+---
+name: spdlog
+version: 1.16.0
+source: https://github.com/gabime/spdlog/archive/refs/tags/v1.16.0.tar.gz
+description: |
+  Fast C++ logging library.
+category: development, logging
+cmake:
+  CMAKE_BUILD_TYPE: Release

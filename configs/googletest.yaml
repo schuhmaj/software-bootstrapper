@@ -1,0 +1,9 @@
+---
+name: googletest
+version: 1.17.0
+source: https://github.com/google/googletest/archive/refs/tags/v1.17.0.tar.gz
+description: |
+  C++ Testing and Mocking Framework.
+category: testing
+cmake:
+  CMAKE_BUILD_TYPE: Release
