@@ -89,6 +89,7 @@ def install_module_file(config: dict[str, str], install_dir: Path, module_dir: P
     module_content = template.replace("@NAME@", config["name"]) \
         .replace("@VERSION@", config["version"]) \
         .replace("@DESCRIPTION@", config.get("description", "")) \
+        .replace("@BRIEF_DESCRIPTION@", config.get("brief_description", "")) \
         .replace("@CATEGORY@", config.get("category", "")) \
         .replace("@INSTALL_DIR@", str(install_dir.absolute()))
 
@@ -106,7 +107,8 @@ if __name__ == "__main__":
     parser.add_argument("install_dir", type=Path)
     parser.add_argument("module_dir", nargs="?", type=Path, default=None)
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Verbosity level (Enable Debug & Trace Logs)")
-    parser.add_argument("-f", "--filter", type=str, default=None, help="Filter specs to install. Must be a regex")
+    parser.add_argument("-i", "--include", type=str, default=None, help="Filter specs to install. Must be a regex")
+    parser.add_argument("-e", "--exclude", type=str, default=None, help="Filter specs to not install. Must be a regex")
     parser.add_argument("--skip-install", action="store_true", default=False, help="Don't install anything. Only create module files.")
     parser.add_argument("--dry-run", action="store_true", default=False, help="Don't install anything")
     args = parser.parse_args()
@@ -114,11 +116,12 @@ if __name__ == "__main__":
     logger.remove()
     logger.add(sys.stdout, level=["INFO", "DEBUG", "TRACE"][args.verbose])
 
-    filter_regex = re.compile(args.filter) if args.filter else None
+    include_regex = re.compile(args.include) if args.include else None
+    exclude_regex = re.compile(args.exclude) if args.exclude else None
 
     spec_configs = load_spec_config(args.spec_dir)
     for config in spec_configs:
-        if filter_regex and filter_regex.match(config["name"]):
+        if (not include_regex or include_regex.match(config["name"])) and not (exclude_regex and exclude_regex.match(config["name"])):
             if args.dry_run:
                 logger.info(f"Would install {config['name']} {config['version']} to {args.install_dir}")
             else:

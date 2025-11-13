@@ -10,12 +10,13 @@ description: |
     - Clang C/C++ compiler
     - LLVM tools and utilities
     - LLVM libraries and headers
+brief_description: LLVM compiler suite
 category: compiler, development
 cmake:
   CMAKE_BUILD_TYPE": "Release"
   LLVM_ENABLE_PROJECTS: "clang;compiler-rt;lld"
   LLVM_ENABLE_RUNTIMES: "openmp;offload"
-  LLVM_TARGETS_TO_BUILD: "NVPTX;X86"
+  LLVM_TARGETS_TO_BUILD: "NVPTX;host"
   LLVM_ENABLE_Z3_SOLVER: "0"
   LLVM_INCLUDE_BENCHMARKS: "0"
   LLVM_INCLUDE_EXAMPLES: "0"

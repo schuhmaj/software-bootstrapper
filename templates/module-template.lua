@@ -9,7 +9,7 @@ Version: @VERSION@
 whatis("Name: @NAME@ ")
 whatis("Version: @VERSION@")
 whatis("Category: @CATEGORY@")
-whatis("Description: @DESCRIPTION@")
+whatis("Description: @BRIEF_DESCRIPTION@")
 
 local root = "@INSTALL_DIR@"
 local bin = pathJoin(root, "bin")

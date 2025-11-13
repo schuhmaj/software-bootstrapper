@@ -4,6 +4,8 @@ version: 1.16.0
 source: https://github.com/gabime/spdlog/archive/refs/tags/v1.16.0.tar.gz
 description: |
   Fast C++ logging library.
+  Header-only, single-header library for logging.
+brief_description: Fast C++ logging library.
 category: development, logging
 cmake:
   CMAKE_BUILD_TYPE: Release
