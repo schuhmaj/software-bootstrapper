@@ -1,0 +1,10 @@
+---
+name: argparse
+version: 3.2.0
+source: https://github.com/p-ranav/argparse/archive/refs/tags/v3.2.tar.gz
+description: |
+  Argparse is a header-only library for parsing command line arguments in C++.
+brief_description: Header-only library for parsing command line arguments in C++.
+category: command-line-parsing
+cmake:
+  CMAKE_BUILD_TYPE: Release
