@@ -9,5 +9,8 @@ brief_description: Portable C++ library for high-performance parallel programmin
 category: parallelism, portable, GPU.
 cmake:
   CMAKE_BUILD_TYPE: Release
-  CMAKE_CXX_STANDARD: 20
+  CMAKE_CXX_STANDARD: "20"
+  Kokkos_ARCH_NATIVE: ON
   Kokkos_ENABLE_CUDA: ON
+  # Kokkos_ENABLE_HIP: ON
+  # Kokkos_ENABLE_OPENMP: ON
