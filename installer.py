@@ -34,12 +34,12 @@ def load_spec_config(path: Path) -> list[dict[str, str]]:
 def install_spec(config: dict[str, str], install_dir: Path, dry_run: bool = False) -> Path:
     logger.info(f"Installing {config['name']} {config['version']}")
     cmake_config = load_cmake_template()
-    install_dir = install_dir / config["name"] / config["version"]
+    install_dir = (install_dir / config["name"] / config["version"]).resolve()
     for k, v in config["cmake"].items():
         cmake_config["configurePresets"][0]["cacheVariables"][k] = v
-    cmake_config["configurePresets"][0]["cacheVariables"]["CMAKE_INSTALL_PREFIX"] = str(install_dir.absolute())
+    cmake_config["configurePresets"][0]["cacheVariables"]["CMAKE_INSTALL_PREFIX"] = str(install_dir.resolve())
     if config['name'] == "llvm":
-        cmake_config["configurePresets"][0]["cacheVariables"]["CMAKE_INSTALL_RPATH"] = str((install_dir / "lib").absolute())
+        cmake_config["configurePresets"][0]["cacheVariables"]["CMAKE_INSTALL_RPATH"] = str((install_dir / "lib").resolve())
 
     if dry_run:
         return install_dir
@@ -81,7 +81,7 @@ def install_spec(config: dict[str, str], install_dir: Path, dry_run: bool = Fals
 
 
 def install_module_file(config: dict[str, str], install_dir: Path, module_dir: Path) -> None:
-    template_path = Path("templates/module-template.lua") if is_compiler(config['name']) else Path("templates/compiler-module-template.lua")
+    template_path = Path("templates/module-template.lua") if not is_compiler(config['name']) else Path("templates/compiler-module-template.lua")
     with open(template_path, "r") as f:
         template = f.read()
 
