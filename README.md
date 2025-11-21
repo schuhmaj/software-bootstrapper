@@ -17,7 +17,7 @@ You need to be in the repository root directory!
 Install only googletest and google-benchmark:
 
 ```bash
-./installer.py -i "googletest|google-benchmark" configs /opt/software /opt/modules
+./installer.py -i "googletest|google-benchmark" configs <install-dir> <module-dir>
 module use /opt/modules # <-- add this to your .bashrc or .zshrc or similar
 module load googletest google-benchmark
 ```
@@ -26,9 +26,6 @@ Install everything else expt llvm:
 
 ```bash
 ./installer.py -e "llvm" configs <install-dir> <module-dir>
-
-module use <module-dir> # <-- add this to your .bashrc or .zshrc or similar for future convenience
-module load llvm
 ```
 
 ## Vulkan Installer
