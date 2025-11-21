@@ -25,8 +25,9 @@ module load googletest google-benchmark
 Install everything else expt llvm:
 
 ```bash
-./installer.py -e "llvm" configs /opt/software /opt/modules
-module use /opt/modules # <-- add this to your .bashrc or .zshrc or similar
+./installer.py -e "llvm" configs <install-dir> <module-dir>
+
+module use <module-dir> # <-- add this to your .bashrc or .zshrc or similar for future convenience
 module load llvm
 ```
 
@@ -41,8 +42,9 @@ module load llvm
 You need to be in the repository root directory!
 
 ```bash
-./installer.py configs /opt/software /opt/modules
-module use /opt/modules # <-- add this to your .bashrc or .zshrc or similar
+./installer_vulkan.py <install-dir> <module-dir>
+
+module use <module-dir> # <-- add this to your .bashrc or .zshrc or similar for future convenience
 module load VulkanSDK
 ```
 
