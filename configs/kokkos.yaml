@@ -1,6 +1,6 @@
 ---
 name: kokkos
-version: 4.7.01
+version: 5.0.0
 source: https://github.com/kokkos/kokkos/archive/refs/tags/4.7.01.tar.gz
 description: |
   Kokkos is a portable, open-source C++ library for high-performance parallel programming.
