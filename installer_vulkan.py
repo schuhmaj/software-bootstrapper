@@ -129,7 +129,7 @@ if __name__ == "__main__":
         help=f"Version of the Vulkan SDK to install. Defaults to the latest version ({VULKAN_SDK_VERSION})",
     )
     parser.add_argument(
-        "--skip-vulkan-install",
+        "--skip-install",
         action="store_true",
         default=False,
         help="Don't install anything. Only create module files.",
@@ -139,9 +139,9 @@ if __name__ == "__main__":
     vulkan_install_dir = install_vulkan(
         install_dir=args.install_dir,
         vulkan_version=args.vulkan_sdk_version,
-        dry_run=args.skip_vulkan_install,
+        dry_run=args.skip_install,
     )
-    if ARCHITECTURE == "aarch64" and SYSTEM == "Linux":
+    if not args.skip_install and ARCHITECTURE == "aarch64" and SYSTEM == "Linux":
         # Only required for aarch64 Linux, the official Vulkan SDK does already include Slang
         install_slang(
             install_dir=args.install_dir, vulkan_install_dir=vulkan_install_dir
