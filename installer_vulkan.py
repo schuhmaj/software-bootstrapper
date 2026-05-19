@@ -16,21 +16,22 @@ def get_download_url():
     return f"https://sdk.lunarg.com/sdk/download/{VULKAN_SDK_VERSION}/linux/vulkansdk-linux-x86_64-{VULKAN_SDK_VERSION}.tar.xz"
 
 
-def install_vulkan(install_dir: Path, vulkan_version: str) -> Path:
+def install_vulkan(install_dir: Path, vulkan_version: str, dry_run: bool = False) -> Path:
     install_dir = install_dir / "VulkanSDK"
-    with TemporaryDirectory() as tmp_dir:
-        # Download source
-        print(f"Downloading Vulkan SDK {VULKAN_SDK_VERSION}")
-        source_url = get_download_url()
-        archive_path = Path(tmp_dir) / "vulkan.tar.xz"
-        urllib.request.urlretrieve(source_url, archive_path)
+    if not dry_run:
+        with TemporaryDirectory() as tmp_dir:
+            # Download source
+            print(f"Downloading Vulkan SDK {vulkan_version}")
+            source_url = get_download_url()
+            archive_path = Path(tmp_dir) / "vulkan.tar.xz"
+            urllib.request.urlretrieve(source_url, archive_path)
 
-        print(f"Extracting Vulkan SDK {VULKAN_SDK_VERSION}")
-        install_dir.mkdir(parents=True, exist_ok=True)
-        with tarfile.open(archive_path) as tar:
-            tar.extractall(install_dir)
+            print(f"Extracting Vulkan SDK {vulkan_version}")
+            install_dir.mkdir(parents=True, exist_ok=True)
+            with tarfile.open(archive_path) as tar:
+                tar.extractall(install_dir)
 
-    return install_dir / VULKAN_SDK_VERSION / "x86_64"
+    return install_dir / vulkan_version / "x86_64"
 
 
 def install_module_file(install_dir: Path, module_dir: Path, vulkan_version: str) -> None:
@@ -40,7 +41,7 @@ def install_module_file(install_dir: Path, module_dir: Path, vulkan_version: str
 
     module_content = template.replace("@INSTALL_DIR@", str(install_dir.absolute()))
 
-    module_file = module_dir / "VulkanSDK" / f"{VULKAN_SDK_VERSION}.lua"
+    module_file = module_dir / "VulkanSDK" / f"{vulkan_version}.lua"
     module_file.parent.mkdir(parents=True, exist_ok=True)
     with open(module_file, "w") as f:
         f.write(module_content)
@@ -53,8 +54,10 @@ if __name__ == "__main__":
     parser.add_argument("install_dir", type=Path)
     parser.add_argument("module_dir", nargs="?", type=Path, default=None)
     parser.add_argument("--vulkan-sdk-version", type=str, default=VULKAN_SDK_VERSION, help=f"Version of the Vulkan SDK to install. Defaults to the latest version ({VULKAN_SDK_VERSION})")
+    parser.add_argument("--skip-install", action="store_true", default=False, help="Don't install anything. Only create module files.")
     args = parser.parse_args()
 
-    install_dir = install_vulkan(args.install_dir, vulkan_version=args.vulkan_sdk_version)
+
+    install_dir = install_vulkan(args.install_dir, vulkan_version=args.vulkan_sdk_version, dry_run=args.skip_install)
     if args.module_dir is not None:
         install_module_file(install_dir, args.module_dir, vulkan_version=args.vulkan_sdk_version)

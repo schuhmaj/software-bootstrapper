@@ -1,0 +1,3 @@
+spack install -j16 -p8  llvm@20.1.8 openmp=runtime +offload targets=nvptx,x86 +lld +clang compiler-rt=runtime
+
+cmake .. -G Ninja -DCMAKE_CXX_STANDARD=20 -DKokkos_ENABLE_CUDA=ON -DKokkos_ARCH_BLACKWELL120=ON -DCMKAE_C_COMPILER=gcc-14 -DCMAKE_CXX_COMPILER=g++-14 -DKokkos_ENABLE_CUDA_LAMBDA=ON -DKokkos_ENABLE_CUDA_LAMBDA=ON 
