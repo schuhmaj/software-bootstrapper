@@ -5,8 +5,10 @@ from pathlib import Path
 import urllib.request
 import tarfile
 import platform
+from typing import Literal
 
 VULKAN_SDK_VERSION = "1.4.328.1"
+
 
 def get_download_url():
     arch = platform.machine()
@@ -16,7 +18,9 @@ def get_download_url():
     return f"https://sdk.lunarg.com/sdk/download/{VULKAN_SDK_VERSION}/linux/vulkansdk-linux-x86_64-{VULKAN_SDK_VERSION}.tar.xz"
 
 
-def install_vulkan(install_dir: Path, vulkan_version: str, dry_run: bool = False) -> Path:
+def install_vulkan(
+    install_dir: Path, vulkan_version: str, dry_run: bool = False
+) -> Path:
     install_dir = install_dir / "VulkanSDK"
     if not dry_run:
         with TemporaryDirectory() as tmp_dir:
@@ -34,30 +38,64 @@ def install_vulkan(install_dir: Path, vulkan_version: str, dry_run: bool = False
     return install_dir / vulkan_version / "x86_64"
 
 
-def install_module_file(install_dir: Path, module_dir: Path, vulkan_version: str) -> None:
-    template_path = Path("templates/vulkan-template.lua")
+def install_module_file(
+    install_dir: Path,
+    module_dir: Path,
+    vulkan_version: str,
+    language: Literal["lua", "tcl"] = "lua",
+) -> None:
+    template_path = Path(f"templates/vulkan-template.{language}")
     with open(template_path, "r") as f:
         template = f.read()
 
     module_content = template.replace("@INSTALL_DIR@", str(install_dir.absolute()))
 
-    module_file = module_dir / "VulkanSDK" / f"{vulkan_version}.lua"
+    module_file = (
+        module_dir
+        / "VulkanSDK"
+        / f"{vulkan_version}{'.lua' if language == 'lua' else ''}"
+    )
     module_file.parent.mkdir(parents=True, exist_ok=True)
     with open(module_file, "w") as f:
         f.write(module_content)
     print(f"Created module file at {module_file}")
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("install_dir", type=Path)
     parser.add_argument("module_dir", nargs="?", type=Path, default=None)
-    parser.add_argument("--vulkan-sdk-version", type=str, default=VULKAN_SDK_VERSION, help=f"Version of the Vulkan SDK to install. Defaults to the latest version ({VULKAN_SDK_VERSION})")
-    parser.add_argument("--skip-install", action="store_true", default=False, help="Don't install anything. Only create module files.")
+    parser.add_argument(
+        "-l",
+        "--language",
+        type=str,
+        default="lua",
+        choices=["lua", "tcl"],
+        help="Language in which to generate the module file - either lua or tcl (defaults to lua)",
+    )
+    parser.add_argument(
+        "--vulkan-sdk-version",
+        type=str,
+        default=VULKAN_SDK_VERSION,
+        help=f"Version of the Vulkan SDK to install. Defaults to the latest version ({VULKAN_SDK_VERSION})",
+    )
+    parser.add_argument(
+        "--skip-install",
+        action="store_true",
+        default=False,
+        help="Don't install anything. Only create module files.",
+    )
     args = parser.parse_args()
 
-
-    install_dir = install_vulkan(args.install_dir, vulkan_version=args.vulkan_sdk_version, dry_run=args.skip_install)
+    install_dir = install_vulkan(
+        args.install_dir,
+        vulkan_version=args.vulkan_sdk_version,
+        dry_run=args.skip_install,
+    )
     if args.module_dir is not None:
-        install_module_file(install_dir, args.module_dir, vulkan_version=args.vulkan_sdk_version)
+        install_module_file(
+            install_dir=install_dir,
+            module_dir=args.module_dir,
+            vulkan_version=args.vulkan_sdk_version,
+            language=args.language,
+        )
