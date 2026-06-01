@@ -8,7 +8,7 @@ import platform
 import shutil
 from typing import Literal
 
-VULKAN_SDK_VERSION: str = "1.4.350.0"
+VULKAN_SDK_VERSION: str = "1.4.350.1"
 SLANG_VERSION: str = "2026.9"
 
 ARCHITECTURE: str = platform.machine()
@@ -17,7 +17,6 @@ OS_VERSION: str = platform.version()
 
 
 def get_download_url():
-
     if ARCHITECTURE == "x86_64" and SYSTEM == "Linux":
         # Official Vulkan SDK download page
         print("Downloading from official Vulkan SDK download page for x86_64 Linux")
@@ -33,16 +32,28 @@ def get_download_url():
 
 
 def install_vulkan(
-    install_dir: Path, vulkan_version: str, dry_run: bool = False
+    install_dir: Path,
+    vulkan_version: str,
+    source: Path | None = None,
+    dry_run: bool = False,
 ) -> Path:
     install_dir = install_dir / "VulkanSDK"
     if not dry_run:
         with TemporaryDirectory() as tmp_dir:
-            # Download source
-            print(f"Downloading Vulkan SDK {vulkan_version}")
-            source_url = get_download_url()
-            archive_path = Path(tmp_dir) / "vulkan.tar.xz"
-            urllib.request.urlretrieve(source_url, archive_path)
+            if source is not None:
+                # Install from an existing local .tar.xz archive
+                archive_path = source.expanduser().resolve()
+                if not archive_path.is_file():
+                    raise FileNotFoundError(
+                        f"--source '{source}' is not an existing archive file."
+                    )
+                print(f"Using local Vulkan SDK archive {archive_path}")
+            else:
+                # Download source
+                print(f"Downloading Vulkan SDK {vulkan_version}")
+                source_url = get_download_url()
+                archive_path = Path(tmp_dir) / "vulkan.tar.xz"
+                urllib.request.urlretrieve(source_url, archive_path)
 
             print(f"Extracting Vulkan SDK {vulkan_version}")
             install_dir.mkdir(parents=True, exist_ok=True)
@@ -129,6 +140,14 @@ if __name__ == "__main__":
         help=f"Version of the Vulkan SDK to install. Defaults to the latest version ({VULKAN_SDK_VERSION})",
     )
     parser.add_argument(
+        "-s",
+        "--source",
+        type=Path,
+        default=None,
+        help="Install from an existing local '.tar.xz' Vulkan SDK archive instead "
+        "of downloading it. Must match --vulkan-sdk-version.",
+    )
+    parser.add_argument(
         "--skip-install",
         action="store_true",
         default=False,
@@ -139,6 +158,7 @@ if __name__ == "__main__":
     vulkan_install_dir = install_vulkan(
         install_dir=args.install_dir,
         vulkan_version=args.vulkan_sdk_version,
+        source=args.source,
         dry_run=args.skip_install,
     )
     if not args.skip_install and ARCHITECTURE == "aarch64" and SYSTEM == "Linux":
