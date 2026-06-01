@@ -14,10 +14,6 @@ import tarfile
 from loguru import logger
 
 
-def is_compiler(name: str) -> bool:
-    return name in ("llvm", "clang", "gcc", "intel", "nvhpc")
-
-
 def load_cmake_template() -> dict:
     cmake_base_template = Path("templates/CMakePresets.json")
     with open(cmake_base_template, "r") as f:
@@ -44,10 +40,6 @@ def install_spec(
     cmake_config["configurePresets"][0]["cacheVariables"]["CMAKE_INSTALL_PREFIX"] = str(
         install_dir.resolve()
     )
-    if config["name"] == "llvm":
-        cmake_config["configurePresets"][0]["cacheVariables"]["CMAKE_INSTALL_RPATH"] = (
-            str((install_dir / "lib").resolve())
-        )
 
     if dry_run:
         return install_dir
@@ -68,10 +60,6 @@ def install_spec(
         if not extracted_dirs:
             raise RuntimeError("No directory found after extraction")
         source_dir = extracted_dirs[0]
-
-        # Special case for llvm
-        if config["name"] == "llvm":
-            source_dir = source_dir / "llvm"
 
         # Write CMake config
         logger.info(f"Writing CMake config for {config['name']} {config['version']}")
@@ -98,11 +86,7 @@ def install_module_file(
     module_dir: Path,
     language: Literal["lua", "tcl"] = "lua",
 ) -> None:
-    template_path = (
-        Path(f"templates/module-template.{language}")
-        if not is_compiler(config["name"])
-        else Path(f"templates/compiler-module-template.{language}")
-    )
+    template_path = Path(f"templates/module-template.{language}")
     with open(template_path, "r") as f:
         template = f.read()
 
