@@ -1,0 +1,60 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "environment": {
+        "LLVM_INSTALL_PREFIX": "$env{HOME}/modules_install/llvm/20.1.8"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INSTALL_PREFIX": "$env{LLVM_INSTALL_PREFIX}",
+        "CMAKE_INSTALL_RPATH": "$env{LLVM_INSTALL_PREFIX}/lib",
+        "LLVM_ENABLE_PROJECTS": "clang;lld",
+        "RUNTIMES_CMAKE_ARGS": "-DCMAKE_C_FLAGS=--gcc-install-dir=$env{GCC_INSTALL_DIR};-DCMAKE_CXX_FLAGS=--gcc-install-dir=$env{GCC_INSTALL_DIR};-DCMAKE_EXE_LINKER_FLAGS=-Wl,-rpath=$env{GCC_LIB_DIR};-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-rpath=$env{GCC_LIB_DIR}",
+        "LLVM_ENABLE_RUNTIMES": "compiler-rt;openmp;offload",
+        "LLVM_TARGETS_TO_BUILD": "NVPTX;host",
+        "LLVM_ENABLE_Z3_SOLVER": "0",
+        "LLVM_INCLUDE_BENCHMARKS": "0",
+        "LLVM_INCLUDE_EXAMPLES": "0",
+        "LLVM_INCLUDE_TESTS": "0",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON",
+        "LLVM_ENABLE_OCAMLDOC": "OFF",
+        "LLVM_ENABLE_BINDINGS": "OFF",
+        "LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN": "OFF",
+        "LLVM_BUILD_LLVM_DYLIB": "ON",
+        "LLVM_ENABLE_DUMP": "OFF",
+        "LLVM_PARALLEL_LINK_JOBS": "8"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "targets": "install"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "default",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        }
+      ]
+    }
+  ]
+}
