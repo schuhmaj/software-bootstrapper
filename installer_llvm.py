@@ -278,7 +278,12 @@ def resolve_gcc_paths(gcc: str, gxx: str) -> tuple[Path, Path]:
     return gcc_install_dir, gcc_lib_dir
 
 
-def load_cmake_template(install_dir: Path, llvm_targets: str, build_dir: str) -> dict:
+def load_cmake_template(
+    install_dir: Path,
+    llvm_targets: str,
+    build_dir: str,
+    offload_plugins: str | None = None,
+) -> dict:
     """Load the CMake preset template and substitute the build parameters.
 
     Args:
@@ -286,6 +291,10 @@ def load_cmake_template(install_dir: Path, llvm_targets: str, build_dir: str) ->
         llvm_targets: ``LLVM_TARGETS_TO_BUILD`` value (``@LLVM_TARGETS@``).
         build_dir: The preset ``binaryDir`` (``@BUILD_DIR@``); either an absolute
             path or the literal ``${sourceDir}/build``.
+        offload_plugins: Optional ``LIBOMPTARGET_PLUGINS_TO_BUILD`` value (e.g.
+            ``"amdgpu"`` or ``"amdgpu;host"``). When given it is appended to the
+            runtimes args; when ``None`` the offload build auto-detects all
+            plugins (LLVM's default).
 
     Returns:
         The parsed CMake preset configuration as a dictionary.
@@ -297,7 +306,17 @@ def load_cmake_template(install_dir: Path, llvm_targets: str, build_dir: str) ->
         .replace("@LLVM_TARGETS@", llvm_targets)
         .replace("@BUILD_DIR@", build_dir)
     )
-    return json.loads(template)
+    config = json.loads(template)
+
+    if offload_plugins:
+        # RUNTIMES_CMAKE_ARGS is itself a ';'-separated list, so any inner ';'
+        # in the plugin list must be escaped to survive as a single -D value.
+        # Append to the parsed value so json.dump handles the backslash escaping.
+        escaped = offload_plugins.replace(";", "\\;")
+        cache = config["configurePresets"][0]["cacheVariables"]
+        cache["RUNTIMES_CMAKE_ARGS"] += f";-DLIBOMPTARGET_PLUGINS_TO_BUILD={escaped}"
+
+    return config
 
 
 def write_clang_config(
@@ -338,6 +357,7 @@ def install_llvm(
     source: str | None = None,
     source_kind: SourceKind = "default",
     build_dir: Path | None = None,
+    offload_plugins: str | None = None,
     dry_run: bool = False,
 ) -> Path:
     """Download/locate, build and install the LLVM toolchain.
@@ -358,6 +378,8 @@ def install_llvm(
         source_kind: Classification of ``source`` from :func:`classify_source`.
         build_dir: Optional persistent build directory injected into the preset;
             when ``None`` the preset builds under ``${sourceDir}/build``.
+        offload_plugins: Optional ``LIBOMPTARGET_PLUGINS_TO_BUILD`` value passed
+            through to the runtimes build (e.g. ``"amdgpu"``).
         dry_run: If ``True``, only report the target install path without
             downloading, building or installing anything.
 
@@ -383,7 +405,9 @@ def install_llvm(
     binary_dir = (
         str(build_dir.resolve()) if build_dir is not None else "${sourceDir}/build"
     )
-    cmake_config = load_cmake_template(install_dir, llvm_targets, binary_dir)
+    cmake_config = load_cmake_template(
+        install_dir, llvm_targets, binary_dir, offload_plugins
+    )
 
     with prepare_source(source, source_kind, version) as project_root:
         # The actual CMake project lives in the llvm/ subdirectory.
@@ -484,6 +508,15 @@ if __name__ == "__main__":
         "llvm-project directory.",
     )
     parser.add_argument(
+        "--offload-plugins",
+        type=str,
+        default=None,
+        help="Restrict LIBOMPTARGET_PLUGINS_TO_BUILD for the offload runtime, e.g. "
+        "'amdgpu' on an AMD-only node (drops the cuda and host plugins, avoiding "
+        "the NVPTX warnings and the host plugin's libffi dependency). When unset, "
+        "the offload build auto-detects all available plugins (LLVM default).",
+    )
+    parser.add_argument(
         "--gcc",
         type=str,
         default="gcc",
@@ -545,6 +578,7 @@ if __name__ == "__main__":
         source=args.source,
         source_kind=source_kind,
         build_dir=args.build,
+        offload_plugins=args.offload_plugins,
         dry_run=args.dry_run or args.skip_install,
     )
 
