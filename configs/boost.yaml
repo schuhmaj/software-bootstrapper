@@ -1,0 +1,17 @@
+---
+name: boost
+version: 1.91.0
+source: https://github.com/boostorg/boost/releases/download/boost-1.91.0-1/boost-1.91.0-1-cmake.tar.gz
+description: |
+  Boost provides free peer-reviewed portable C++ source libraries,
+  emphasizing libraries that work well with the C++ Standard Library.
+  This is the CMake super-project release, which builds and installs a
+  find_package(Boost CONFIG)-compatible toolchain.
+brief_description: Free peer-reviewed portable C++ source libraries.
+category: development, c++ libraries
+cmake:
+  CMAKE_BUILD_TYPE: Release
+  BUILD_SHARED_LIBS: ON
+  CMAKE_POSITION_INDEPENDENT_CODE: ON
+  CMAKE_INSTALL_RPATH_USE_LINK_PATH: ON
+  # BOOST_INCLUDE_LIBRARIES: "system;filesystem;program_options"
