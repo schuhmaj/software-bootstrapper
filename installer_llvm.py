@@ -35,6 +35,11 @@ from loguru import logger
 
 SourceKind = Literal["default", "url", "archive", "directory"]
 
+# Template files ship next to this script, so resolve them relative to the
+# script's location rather than the current working directory. This lets the
+# script be invoked from anywhere.
+TEMPLATES_DIR: Path = Path(__file__).resolve().parent / "templates"
+
 DEFAULT_LLVM_VERSION: str = "20.1.8"
 DEFAULT_LLVM_TARGETS: str = "host"
 
@@ -285,7 +290,7 @@ def load_cmake_template(install_dir: Path, llvm_targets: str, build_dir: str) ->
     Returns:
         The parsed CMake preset configuration as a dictionary.
     """
-    template_path = Path("templates/llvm-CMakePresets.json")
+    template_path = TEMPLATES_DIR / "llvm-CMakePresets.json"
     template = template_path.read_text()
     template = (
         template.replace("@INSTALL_DIR@", str(install_dir.resolve()))
@@ -423,7 +428,7 @@ def install_module_file(
         version: LLVM version, used in the module contents and file name.
         language: Module flavour to emit, either ``"lua"`` (Lmod) or ``"tcl"``.
     """
-    template_path = Path(f"templates/llvm-module-template.{language}")
+    template_path = TEMPLATES_DIR / f"llvm-module-template.{language}"
     template = template_path.read_text()
 
     module_content = (
