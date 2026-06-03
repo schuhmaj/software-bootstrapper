@@ -9,6 +9,9 @@ brief_description: Portable C++ library for high-performance parallel programmin
 category: parallelism, portable, GPU.
 cmake:
   CMAKE_BUILD_TYPE: Release
+  BUILD_SHARED_LIBS: ON
+  CMAKE_POSITION_INDEPENDENT_CODE: ON
+  CMAKE_INSTALL_RPATH_USE_LINK_PATH: ON
 
   # For CUDA
   Kokkos_ARCH_NATIVE: ON
@@ -16,8 +19,5 @@ cmake:
 
   # For HIP
 #  Kokkos_ENABLE_HIP: ON
-#  BUILD_SHARED_LIBS: ON
-#  CMAKE_POSITION_INDEPENDENT_CODE: ON
-#  CMAKE_INSTALL_RPATH_USE_LINK_PATH: ON
 #  DCMAKE_CXX_COMPILER: amdclang++
 

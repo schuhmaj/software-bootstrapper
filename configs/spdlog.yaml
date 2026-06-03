@@ -9,3 +9,6 @@ brief_description: Fast C++ logging library.
 category: development, logging
 cmake:
   CMAKE_BUILD_TYPE: Release
+  BUILD_SHARED_LIBS: ON
+  CMAKE_POSITION_INDEPENDENT_CODE: ON
+  CMAKE_INSTALL_RPATH_USE_LINK_PATH: ON

@@ -8,3 +8,6 @@ brief_description: Header-only library for parsing command line arguments in C++
 category: command-line-parsing
 cmake:
   CMAKE_BUILD_TYPE: Release
+  BUILD_SHARED_LIBS: ON
+  CMAKE_POSITION_INDEPENDENT_CODE: ON
+  CMAKE_INSTALL_RPATH_USE_LINK_PATH: ON
