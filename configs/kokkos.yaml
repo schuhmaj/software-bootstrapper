@@ -21,3 +21,9 @@ cmake:
 #  Kokkos_ENABLE_HIP: ON
 #  DCMAKE_CXX_COMPILER: amdclang++
 
+  # For Intel
+#  DCMAKE_C_COMPILER: icx
+#  DCMAKE_CXX_COMPILER: icpx
+#  Kokkos_ENABLE_SYCL: ON
+#  Kokkos_ENABLE_SYCL_RELOCATABLE_DEVICE_CODE: ON
+

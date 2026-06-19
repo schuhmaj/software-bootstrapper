@@ -81,3 +81,12 @@ the gcc-14 `lib64`. After this, rebuilt executables run without setting
 
 - `icpx.cfg`, `icx.cfg` — templates; regenerate on-system via step 3 so the
   literal Spack paths are correct for the currently loaded `gcc/14` module.
+
+```
+
+cmake .. -G Ninja \
+  -DCMAKE_C_COMPILER=icx \
+  -DCMAKE_CXX_COMPILER=icpx \
+  -DCMAKE_C_FLAGS="--gcc-install-dir=${GCC_INSTALL_DIR} -Wl,-rpath=${GCC_LIB_DIR}" \
+  -DCMAKE_CXX_FLAGS="--gcc-install-dir=${GCC_INSTALL_DIR} -Wl,-rpath=${GCC_LIB_DIR}"
+```
