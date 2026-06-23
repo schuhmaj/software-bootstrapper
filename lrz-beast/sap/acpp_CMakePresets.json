@@ -1,0 +1,102 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "intel2023",
+      "displayName": "AdaptiveCpp + IntelLLVM (icx/icpx) 2023",
+      "description": "AdaptiveCpp with the Level Zero backend (native for Intel GPUs), minimal feature profile, Intel oneAPI compiler. The OpenCL backend is intentionally OFF: it requires a full Khronos OpenCL ICD-Loader install (providing OpenCLICDLoaderConfig.cmake), which the oneAPI libOpenCL.so does not ship.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-intel2023",
+      "toolchainFile": "${sourceDir}/intel-gcc-toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON",
+        "CMAKE_CXX_COMPILER": "icpx",
+        "CMAKE_C_COMPILER": "icx",
+        "ACPP_COMPILER_FEATURE_PROFILE": "minimal",
+        "WITH_OPENCL_BACKEND": "OFF",
+        "WITH_LEVEL_ZERO_BACKEND": "ON"
+      }
+    },
+    {
+      "name": "intel2026",
+      "displayName": "AdaptiveCpp + IntelLLVM (icx/icpx) 2026",
+      "description": "AdaptiveCpp with the Level Zero backend (native for Intel GPUs), minimal feature profile, Intel oneAPI compiler. The OpenCL backend is intentionally OFF: it requires a full Khronos OpenCL ICD-Loader install (providing OpenCLICDLoaderConfig.cmake), which the oneAPI libOpenCL.so does not ship.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-intel2026",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON",
+        "CMAKE_CXX_COMPILER": "icpx",
+        "CMAKE_C_COMPILER": "icx",
+        "ACPP_COMPILER_FEATURE_PROFILE": "minimal",
+        "WITH_OPENCL_BACKEND": "OFF",
+        "WITH_LEVEL_ZERO_BACKEND": "ON"
+      }
+    },
+    {
+      "name": "intel2023-full",
+      "displayName": "AdaptiveCpp + IntelLLVM (icx/icpx) 2023",
+      "description": "AdaptiveCpp with the Level Zero backend (native for Intel GPUs), minimal feature profile, Intel oneAPI compiler. The OpenCL backend is intentionally OFF: it requires a full Khronos OpenCL ICD-Loader install (providing OpenCLICDLoaderConfig.cmake), which the oneAPI libOpenCL.so does not ship.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-intel2023-full",
+      "toolchainFile": "${sourceDir}/intel-gcc-toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON",
+        "CMAKE_CXX_COMPILER": "icpx",
+        "CMAKE_C_COMPILER": "icx",
+        "ACPP_COMPILER_FEATURE_PROFILE": "full",
+        "WITH_OPENCL_BACKEND": "OFF",
+        "WITH_LEVEL_ZERO_BACKEND": "ON"
+      }
+    },
+    {
+      "name": "intel2026-full",
+      "displayName": "AdaptiveCpp + IntelLLVM (icx/icpx) 2026",
+      "description": "AdaptiveCpp with the Level Zero backend (native for Intel GPUs), minimal feature profile, Intel oneAPI compiler. The OpenCL backend is intentionally OFF: it requires a full Khronos OpenCL ICD-Loader install (providing OpenCLICDLoaderConfig.cmake), which the oneAPI libOpenCL.so does not ship.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-intel2026-full",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON",
+        "CMAKE_CXX_COMPILER": "icpx",
+        "CMAKE_C_COMPILER": "icx",
+        "ACPP_COMPILER_FEATURE_PROFILE": "full",
+        "WITH_OPENCL_BACKEND": "OFF",
+        "WITH_LEVEL_ZERO_BACKEND": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "intel2023",
+      "displayName": "Build AdaptiveCpp (intel2023)",
+      "configurePreset": "intel2023"
+    },
+    {
+      "name": "intel2026",
+      "displayName": "Build AdaptiveCpp (intel2026)",
+      "configurePreset": "intel2026"
+    },
+    {
+      "name": "intel2023-full",
+      "displayName": "Build AdaptiveCpp (intel2023) Full",
+      "configurePreset": "intel2023-full"
+    },
+    {
+      "name": "intel2026-full",
+      "displayName": "Build AdaptiveCpp (intel2026) Full",
+      "configurePreset": "intel2026-full"
+    }
+  ]
+}

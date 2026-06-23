@@ -10,3 +10,11 @@ brief_description: Portable C++ library for high-performance parallel programmin
 category: parallelism, portable, GPU.
 cmake:
   CMAKE_BUILD_TYPE: Release
+
+
+# For IntelLLVM 2023/ 2026 Config
+#  CMAKE_CXX_COMPILER: icpx
+#  CMAKE_C_COMPILER: icx
+#  ACPP_COMPILER_FEATURE_PROFILE: minimal
+#  WITH_OPENCL_BACKEND: OFF
+#  WITH_LEVEL_ZERO_BACKEND: ON
