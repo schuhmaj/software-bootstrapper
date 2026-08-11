@@ -13,6 +13,10 @@ import urllib.request
 import tarfile
 from loguru import logger
 
+# Like the templates, the specs are resolved relative to the current working
+# directory, i.e. the script is meant to be run from the repository root.
+CONFIG_DIR = Path("configs")
+
 
 def load_cmake_template() -> dict:
     cmake_base_template = Path("templates/CMakePresets.json")
@@ -21,6 +25,11 @@ def load_cmake_template() -> dict:
 
 
 def load_spec_config(path: Path) -> list[dict[str, str]]:
+    if not path.is_dir():
+        raise NotADirectoryError(
+            f"No spec directory '{path}' found. Run this script from the "
+            "repository root."
+        )
     configs = list()
     for file in path.iterdir():
         if file.suffix == ".yaml":
@@ -112,8 +121,10 @@ def install_module_file(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("spec_dir", type=Path)
+    parser = argparse.ArgumentParser(
+        description=f"Install the specs found in '{CONFIG_DIR}/'. Must be run "
+        "from the repository root."
+    )
     parser.add_argument("install_dir", type=Path)
     parser.add_argument("module_dir", nargs="?", type=Path, default=None)
     parser.add_argument(
@@ -162,7 +173,7 @@ if __name__ == "__main__":
     include_regex = re.compile(args.include) if args.include else None
     exclude_regex = re.compile(args.exclude) if args.exclude else None
 
-    spec_configs = load_spec_config(args.spec_dir)
+    spec_configs = load_spec_config(CONFIG_DIR)
     for config in spec_configs:
         if (not include_regex or include_regex.match(config["name"])) and not (
             exclude_regex and exclude_regex.match(config["name"])

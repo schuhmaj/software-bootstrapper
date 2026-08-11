@@ -1,0 +1,11 @@
+# Conda environment for the software-bootstrapper scripts.
+#
+#   conda env create -f environment.yaml
+#   conda activate software-bootstrapper
+name: software-bootstrapper
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pyyaml>=6.0        # (installer.py)
+  - loguru>=0.7        # (installer.py, installer_llvm.py)
