@@ -1,0 +1,3 @@
+repo:
+  namespace: 'bootstrapper'
+  api: v2.4

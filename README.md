@@ -253,6 +253,7 @@ module load VulkanSDK
 | [`templates/`](templates) | `CMakePresets.json` and modulefile templates with `@PLACEHOLDER@` markers |
 | [`tools/lrz-beast/`](tools/lrz-beast) | node-specific notes and configs for the LRZ BEAST cluster (Grace-Hopper, Milan, Sapphire Rapids + PVC), including the [`libstdc++`/`icpx` how-tos](tools/lrz-beast/sap/README.md) |
 | [`tools/examples/`](tools/examples) | example modulefiles and `CMakePresets.json` for reference |
+| [`tools/hpctoolkit/`](tools/hpctoolkit) | [how-to for installing HPCToolkit (+cuda +opencl) via Spack](tools/hpctoolkit/How-to-hpctoolkit.md), plus a Spack package repo overlay carrying the GCC 15 `<cstdint>` patch for `dyninst@13.0.0` |
 
 ## Related
 

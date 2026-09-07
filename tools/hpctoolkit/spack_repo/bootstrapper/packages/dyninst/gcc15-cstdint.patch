@@ -1,0 +1,30 @@
+--- a/common/src/sha1.C
++++ b/common/src/sha1.C
+@@ -100,6 +100,7 @@
+ /* #define SHA1HANDSOFF  */
+ 
+ 
++#include <cstdint>
+ #include <stdio.h>
+ #include <string.h>
+ 
+--- a/common/src/arch-x86.h
++++ b/common/src/arch-x86.h
+@@ -34,6 +34,7 @@
+ #ifndef _ARCH_X86_H
+ #define _ARCH_X86_H
+ 
++#include <cstdint>
+ #include "dyntypes.h"
+ #include <assert.h>
+ #include <stdio.h>
+--- a/instructionAPI/h/ArchSpecificFormatters.h
++++ b/instructionAPI/h/ArchSpecificFormatters.h
+@@ -31,6 +31,7 @@
+ #ifndef DYNINST_ARCHSPECIFICFORMATTERS_H
+ #define DYNINST_ARCHSPECIFICFORMATTERS_H
+ 
++#include <cstdint>
+ #include <map>
+ #include <vector>
+ #include <string>
