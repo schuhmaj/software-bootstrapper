@@ -211,7 +211,8 @@ loader and prints nothing here).
 
 ### 7. AdaptiveCpp on the MI210
 
-**`generic` (JIT) target: segfault** — last known state, unresolved
+**`generic` (JIT) target: segfault** — use the `hip:gfx90a` target
+(did throw warning due to potentially incompatible LLVM; but worked)
 
 The HIP backend finds all 8 GPUs and the first (small) kernel JIT-compiles and runs. The second, large
 reduction kernel crashes with `Speicherzugriffsfehler` right after `LLVMToAmdgpu: Invoking hipRTC...`.
@@ -228,15 +229,6 @@ Useful runtime switches: `ACPP_VISIBILITY_MASK=hip` (skip the OpenCL backend),
 cmake --preset rocm-llvm-cdna --fresh -DACPP_TARGETS="hip:gfx90a" -DHIP_PLATFORM=amd
 cmake --build build-rocm-llvm-cdna --target polyhedral_acpp
 ```
-
-Requires the `amdgcn` symlink from 4.(b). `acpp --acpp-version | grep -i rocm` shows the ROCm
-path and flags acpp actually uses. Possible follow-up error: clang 20 reading ROCm 7.10 bitcode
-built by LLVM 22 (`Unknown attribute kind`, `Invalid record`) — same LLVM version gap as above.
-
-Note that AOT (`hip:gfx90a`) is a different compilation flow than `generic` — keep that in mind
-when comparing AdaptiveCpp results across GPUs.
-
----
 
 ## SAP node (Intel GPU Max 1550)
 
